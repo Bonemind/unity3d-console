@@ -1,22 +1,29 @@
 using UnityEngine;
 using System.Collections;
 
-public class ConsoleToggler : MonoBehaviour {
+public class ConsoleToggler : MonoBehaviour
+{
     private bool consoleEnabled = false;
     public ConsoleAction ConsoleOpenAction;
     public ConsoleAction ConsoleCloseAction;
 
-    void Update () {
-        if (Input.GetKeyDown(KeyCode.BackQuote)) {
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.BackQuote))
+        {
             ToggleConsole();
         }
     }
 
-    private void ToggleConsole() {
+    private void ToggleConsole()
+    {
         consoleEnabled = !consoleEnabled;
-        if (consoleEnabled) {
+        if (consoleEnabled)
+        {
             ConsoleOpenAction.Activate();
-        } else {
+        }
+        else
+        {
             ConsoleCloseAction.Activate();
         }
     }

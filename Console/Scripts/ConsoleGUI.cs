@@ -62,11 +62,9 @@ public class ConsoleGUI : MonoBehaviour
 
     public void Update()
     {
-        if (Input.GetKeyDown(KeyCode.PageDown))
+        if (input == "`")
         {
-            Debug.Log(scrollPosition);
-            int numLines = consoleLog.log.Split('\n').Length;
-            Debug.Log(numLines);
+            input = "";
         }
     }
 
