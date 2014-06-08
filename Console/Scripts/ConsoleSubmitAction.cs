@@ -15,6 +15,10 @@ public class ConsoleSubmitAction : ConsoleAction
         consoleLog = ConsoleLog.Instance;
     }
 
+    /// <summary>
+    /// Actually submits a command
+    /// Splits the arguments, checks if the command exists, calls the callback if it does and prints an error otherwise
+    /// </summary>
     public override void Activate()
     {
         string[] parts = consoleGUI.input.Split(' ');
