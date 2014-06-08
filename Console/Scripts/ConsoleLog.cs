@@ -13,10 +13,8 @@ public class ConsoleLog {
     }
 
     public string log = "";
-	public int scrollLength;
 
     public void Log(string message) {
         log += message + "\n";
-		scrollLength += 20;
     }
 }
