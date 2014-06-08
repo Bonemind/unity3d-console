@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class ConsoleGUI : MonoBehaviour
 {
@@ -15,10 +16,19 @@ public class ConsoleGUI : MonoBehaviour
     private int lineCount = 0;
     public const int SCROLLDOWN_LARGE_VALUE = 100000;
 
+    private ConsoleCommandsRepository consoleCommandsRepository;
+
+    private int maxConsoleHistorySize = 100;
+    private int consoleHistoryPosition = 0;
+    private List<string> consoleHistoryCommands = new List<string>();
+    private bool fixPositionNextFrame = false; // a hack because the up arrow moves the cursor to the first position.
+
+
     private void Start()
     {
         consoleRect = new Rect(0, 0, Screen.width, Mathf.Min(300, Screen.height));
         consoleLog = ConsoleLog.Instance;
+        consoleCommandsRepository = ConsoleCommandsRepository.Instance;
     }
 
     private void OnEnable()
@@ -38,8 +48,16 @@ public class ConsoleGUI : MonoBehaviour
 
     private void RenderWindow(int id)
     {
+        if (fixPositionNextFrame)
+        {
+            MoveCursorToPos(input.Length);
+            fixPositionNextFrame = false;
+        }
         HandleSubmit();
         HandleEscape();
+        HandleTab();
+        HandleUp();
+        HandleDown();
         int numLines = consoleLog.log.Split('\n').Length;
         //Scroll the console to the bottom when a new line is added
         if (numLines != lineCount)
@@ -72,9 +90,15 @@ public class ConsoleGUI : MonoBehaviour
     {
         if (KeyDown("[enter]") || KeyDown("return"))
         {
+            consoleHistoryPosition = -1;
             if (submitAction != null)
             {
                 submitAction.Activate();
+                consoleHistoryCommands.Insert(0, input);
+                if (consoleHistoryCommands.Count > maxConsoleHistorySize)
+                {
+                    consoleHistoryCommands.RemoveAt(consoleHistoryCommands.Count - 1);
+                }
             }
             input = "";
         }
@@ -92,5 +116,87 @@ public class ConsoleGUI : MonoBehaviour
     private bool KeyDown(string key)
     {
         return Event.current.Equals(Event.KeyboardEvent(key));
+    }
+
+    private string LargestSubString(string in1, string in2) // takes two strings and returns the largest matching substring.
+    {
+        string output = "";
+        int smallestLen = Mathf.Min(in1.Length, in2.Length);
+        for (int i = 0; i < smallestLen; i++)
+        {
+            if (in1[i] == in2[i]) output += in1[i];
+            else return output;
+        }
+        return output;
+    }
+
+    private void MoveCursorToPos(int position)
+    {
+        TextEditor editor = (TextEditor)GUIUtility.GetStateObject(typeof(TextEditor), GUIUtility.keyboardControl);
+        editor.selectPos = position;
+        editor.pos = position;
+        return;
+    }
+
+    private void HandleTab()
+    {
+        if (KeyDown("tab"))
+        {
+            if (input != "")
+            { // don't do anything if the input field is still blank.
+                List<string> search = consoleCommandsRepository.SearchCommands(input);
+                if (search.Count == 0)
+                { // nothing found
+                    consoleLog.Log("No command start with \"" + input + "\".");
+                    input = ""; // clear input
+                    return;
+                }
+                else if (search.Count == 1)
+                {
+                    input = search[0] + " "; // only found one command - type it in for the guy
+                    MoveCursorToPos(input.Length);
+                }
+                else
+                {
+                    consoleLog.Log("Commands starting with \"" + input + "\":");
+                    string largestMatch = search[0]; // keep track of the largest substring that matches all searches
+                    foreach (string command in search)
+                    {
+                        consoleLog.Log(command);
+                        largestMatch = LargestSubString(largestMatch, command);
+                    }
+                    input = largestMatch;
+                    MoveCursorToPos(input.Length);
+                }
+            }
+        }
+    }
+
+    private void HandleUp()
+    {
+        if (KeyDown("up"))
+        {
+            consoleHistoryPosition += 1;
+            if (consoleHistoryPosition > consoleHistoryCommands.Count - 1) consoleHistoryPosition = consoleHistoryCommands.Count - 1;
+            input = consoleHistoryCommands[consoleHistoryPosition];
+            fixPositionNextFrame = true;
+            //MoveCursorToPos(input.Length);
+        }
+    }
+
+    private void HandleDown()
+    {
+        if (KeyDown("down"))
+        {
+            consoleHistoryPosition -= 1;
+            if (consoleHistoryPosition < 0)
+            {
+                consoleHistoryPosition = -1;
+                input = "";
+            }
+            else
+                input = consoleHistoryCommands[consoleHistoryPosition];
+            MoveCursorToPos(input.Length);
+        }
     }
 }

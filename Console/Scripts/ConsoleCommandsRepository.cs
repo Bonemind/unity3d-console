@@ -64,4 +64,18 @@ public class ConsoleCommandsRepository
         return ret;
     }
 
+    public List<string> SearchCommands(string str)
+    {
+        string[] keys = new string[repository.Count];
+        repository.Keys.CopyTo(keys, 0);
+        List<string> output = new List<string>();
+        foreach (string key in keys)
+        {
+            if (key.StartsWith(str))
+                output.Add(key);
+        }
+        return output;
+    }
+
+
 }
