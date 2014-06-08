@@ -5,8 +5,10 @@ Synopsis
 --------
 
 Quake-style console plugin for Unity3d.  Toggle the console by pressing tilde (~).
+
 Forked from  [mikelovesrobots/unity3d-console] (https://github.com/mikelovesrobots/unity3d-console)
-Includes:
+
+#### Includes:
 
 * Original functionality
 * [KovaaK's] (https://github.com/KovaaK) Tab completion and command history
