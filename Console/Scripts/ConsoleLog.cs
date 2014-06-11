@@ -19,6 +19,7 @@ public class ConsoleLog
             if (instance == null)
             {
                 instance = new ConsoleLog();
+                Application.RegisterLogCallback(Instance.HandleLog);
             }
             return instance;
         }
@@ -36,5 +37,16 @@ public class ConsoleLog
     public void Log(string message)
     {
         log += message + "\n";
+    }
+
+    /// <summary>
+    /// Handles the logging of unity debug messages
+    /// </summary>
+    /// <param name="logString">The logged string</param>
+    /// <param name="stackTrace">The stacktrace</param>
+    /// <param name="type">The logtype</param>
+    public void HandleLog(string logString, string stackTrace, LogType type)
+    {
+        Instance.Log(string.Format("[{0}] {1}", type.ToString(), logString));
     }
 }
