@@ -73,7 +73,7 @@ public class ConsoleGUI : MonoBehaviour
     /// <summary>
     /// Setup this instance
     /// </summary>
-    private void Start()
+    private void Awake()
     {
         consoleRect = new Rect(0, 0, Screen.width, Mathf.Min(300, Screen.height));
         consoleLog = ConsoleLog.Instance;
@@ -250,7 +250,7 @@ public class ConsoleGUI : MonoBehaviour
         //Nothing was typed yet, assume the user wanted to list all commands and then return
         if (input == "")
         {
-            consoleLog.Log(consoleCommandsRepository.ListCommands());
+            consoleCommandsRepository.ListCommands();
             return;
         }
 

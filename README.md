@@ -43,16 +43,16 @@ public class ConsoleCommandRouter : MonoBehaviour {
         repo.RegisterCommand("load", Load);
     }
 
-    public string Save(params string[] args) {
+    public void Save(params string[] args) {
         var filename = args[0];
         new LevelSaver().Save(filename);
-        return "Saved to " + filename;
+        Debug.Log("Saved to " + filename);
     }
 
-    public string Load(params string[] args) {
+    public void Load(params string[] args) {
         var filename = args[0];
         new LevelLoader().Load(filename);
-        return "Loaded " + filename;
+        Debug.Log("Loaded " + filename);
     }
 }
 ```
@@ -65,8 +65,7 @@ Logging
 -------
 
 ```
-var logger = ConsoleLog.Instance;
-logger.Log("Player died")
+Debug.Log("Player died")
 ```
 
 Logs to the in-game console.

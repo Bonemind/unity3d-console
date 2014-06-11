@@ -28,11 +28,11 @@ public class ConsoleSubmitAction : ConsoleAction
         consoleLog.Log("> " + consoleGUI.input);
         if (consoleCommandsRepository.HasCommand(command))
         {
-            consoleLog.Log(consoleCommandsRepository.ExecuteCommand(command, args));
+            consoleCommandsRepository.ExecuteCommand(command, args);
         }
         else
         {
-            consoleLog.Log("Command " + command + " not found");
+            Debug.LogError("Command " + command + " not found");
         }
     }
 }
