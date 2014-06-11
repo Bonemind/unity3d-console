@@ -16,6 +16,7 @@ Forked from  [mikelovesrobots/unity3d-console] (https://github.com/mikelovesrobo
 * Autoscroll fix when a new message is logged
 * Command listing using list
 * Basic handling for double command registration
+* Unity Debug.Log message display in console window
 
 Screenshot
 -----------
