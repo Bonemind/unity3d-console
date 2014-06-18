@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public delegate string ConsoleCommandCallback(params string[] args);
+public delegate void ConsoleCommandCallback(params string[] args);
 
 public class ConsoleCommandsRepository
 {
@@ -24,7 +24,6 @@ public class ConsoleCommandsRepository
     {
         repository = new Dictionary<string, ConsoleCommandCallback>();
         this.RegisterCommand("list", ListCommands);
-        this.RegisterCommand("list", ListCommands);
     }
 
     public void RegisterCommand(string command, ConsoleCommandCallback callback)
@@ -42,26 +41,25 @@ public class ConsoleCommandsRepository
         return repository.ContainsKey(command);
     }
 
-    public string ExecuteCommand(string command, string[] args)
+    public void ExecuteCommand(string command, string[] args)
     {
         if (HasCommand(command))
         {
-            return repository[command](args);
+            repository[command](args);
         }
         else
         {
-            return "Command not found";
+            Debug.LogError("Command not found");
         }
     }
 
-    public string ListCommands(params string[] args)
+    public void ListCommands(params string[] args)
     {
-        string ret = "Commands:\n";
+        Debug.Log("Commands:");
         foreach (KeyValuePair<string, ConsoleCommandCallback> pair in repository)
         {
-            ret += pair.Key + "\n";
+            Debug.Log(pair.Key);
         }
-        return ret;
     }
 
     public List<string> SearchCommands(string str)
@@ -76,6 +74,4 @@ public class ConsoleCommandsRepository
         }
         return output;
     }
-
-
 }
