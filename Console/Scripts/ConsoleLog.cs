@@ -1,5 +1,5 @@
 using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 
 public class ConsoleLog
 {
@@ -7,6 +7,30 @@ public class ConsoleLog
     /// The current instance
     /// </summary>
     private static ConsoleLog instance;
+
+    /// <summary>
+    /// The current list of lines
+    /// </summary>
+    private List<string> lines;
+
+    /// <summary>
+    /// The maximum number of lines to store
+    /// </summary>
+    private int MaxLines = 512;
+
+    /// <summary>
+    /// Whether we have new lines
+    /// </summary>
+    private bool hasNewLines;
+
+    /// <summary>
+    /// Default constructor
+    /// </summary>
+    public ConsoleLog()
+    {
+        hasNewLines = false;
+        lines = new List<string>();
+    }
 
     /// <summary>
     /// Getter/setter to make sure we always have only one instance
@@ -26,6 +50,20 @@ public class ConsoleLog
     }
 
     /// <summary>
+    /// Returns whether the log has new lines since the last time this was checked
+    /// Will set HasNewLines to false
+    /// </summary>
+    public bool HasNewLines
+    {
+        get
+        {
+            bool current = hasNewLines;
+            hasNewLines = false;
+            return current;
+        }
+    }
+
+    /// <summary>
     /// The current log
     /// </summary>
     public string log = "";
@@ -36,7 +74,16 @@ public class ConsoleLog
     /// <param name="message">The message to log</param>
     public void Log(string message)
     {
-        log += message + "\n";
+        lines.Add(message);
+        //We're exceeding the maximum number of lines we want to store
+        if (lines.Count > MaxLines)
+        {
+            int diff = lines.Count - MaxLines;
+            //Removes the oldest messages until we have the amount of lines we wanted to store left
+            lines.RemoveRange(0, diff);
+        }
+        log = string.Join("\n", lines.ToArray());
+        hasNewLines = true;
     }
 
     /// <summary>

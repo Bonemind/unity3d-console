@@ -34,12 +34,6 @@ public class ConsoleGUI : MonoBehaviour
     private int scrollPosition;
 
     /// <summary>
-    /// The current linecount
-    /// Used to determine if a line was added so we know when to scroll to the bottom
-    /// </summary>
-    private int lineCount = 0;
-
-    /// <summary>
     /// An arbitrary large number used to scroll to the bottom of the console window
     /// </summary>
     public const int SCROLLDOWN_LARGE_VALUE = 100000;
@@ -155,12 +149,10 @@ public class ConsoleGUI : MonoBehaviour
         {
             input = "";
         }
-        int numLines = consoleLog.log.Split('\n').Length;
-        if (numLines != lineCount)
+        if (consoleLog.HasNewLines)
         {
             scrollPosition = SCROLLDOWN_LARGE_VALUE;
         }
-        lineCount = numLines;
     }
 
     /// <summary>
