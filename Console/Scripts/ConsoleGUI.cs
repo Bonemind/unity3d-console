@@ -289,7 +289,14 @@ public class ConsoleGUI : MonoBehaviour
         if (KeyDown("up"))
         {
             consoleHistoryPosition += 1;
-            if (consoleHistoryPosition > consoleHistoryCommands.Count - 1) consoleHistoryPosition = consoleHistoryCommands.Count - 1;
+            if (consoleHistoryPosition > consoleHistoryCommands.Count - 1)
+            { 
+                consoleHistoryPosition = consoleHistoryCommands.Count - 1; 
+            }
+            if (consoleHistoryCommands.Count == 0)
+            {
+                return;
+            }
             input = consoleHistoryCommands[consoleHistoryPosition];
             fixPositionNextFrame = true;
         }
@@ -309,7 +316,9 @@ public class ConsoleGUI : MonoBehaviour
                 input = "";
             }
             else
+            {
                 input = consoleHistoryCommands[consoleHistoryPosition];
+            }
             MoveCursorToPos(input.Length);
         }
     }
